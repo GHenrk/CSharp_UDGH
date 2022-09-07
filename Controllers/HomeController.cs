@@ -1,7 +1,7 @@
 ﻿using CSharpUdemy_MVC.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
-
+using CSharpUdemy_MVC.Models.ViewModels;
 namespace CSharpUdemy_MVC.Controllers
 {
     public class HomeController : Controller
