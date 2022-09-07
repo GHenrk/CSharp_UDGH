@@ -1,4 +1,4 @@
-namespace CSharpUdemy_MVC.Models
+namespace CSharpUdemy_MVC.Models.ViewModels
 {
     public class ErrorViewModel
     {
