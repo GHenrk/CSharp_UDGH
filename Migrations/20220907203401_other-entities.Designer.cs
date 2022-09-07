@@ -3,6 +3,7 @@ using System;
 using CSharpUdemy_MVC.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CSharpUdemy_MVC.Migrations
 {
     [DbContext(typeof(CSharpUdemy_MVCContext))]
-    partial class CSharpUdemy_MVCContextModelSnapshot : ModelSnapshot
+    [Migration("20220907203401_other-entities")]
+    partial class otherentities
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
