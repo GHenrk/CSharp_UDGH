@@ -16,6 +16,7 @@ namespace CSharpUdemy_MVC.Controllers
         public IActionResult Index()
         {
             ViewData["Teste"] = "Edicao view Data teste";
+            ViewData["Teste1"] = "Edicao view Data teste";
             return View();
         }
 
