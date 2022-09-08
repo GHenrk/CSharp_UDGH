@@ -2,13 +2,14 @@
 using Microsoft.Extensions.DependencyInjection;
 using CSharpUdemy_MVC.Data;
 using Pomelo.EntityFrameworkCore.MySql;
-
+using CSharpUdemy_MVC.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<CSharpUdemy_MVCContext>(options =>
     options.UseMySql("server=localhost;user=root;password=1234567; database=CSharpUdemy" , MySqlServerVersion.Parse("8.0.30-mysql")));
 
 builder.Services.AddScoped<SeedingService>();
+builder.Services.AddScoped<SellerService>();
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
