@@ -39,20 +39,21 @@
             <tr class="table-primary">
                 <td>
                     @Html.DisplayFor(modelItem => item.Name)
-                    </td>
-                    <td>
+                </td>
+                <td>
                     @Html.DisplayFor(modelItem => item.Email)
-                    </td>
-                    <td>
+                </td>
+                <td>
                     @Html.DisplayFor(modelItem => item.BirthDate)
-                    </td>
-                   <td>
+                </td>
+                <td>
                     @Html.DisplayFor(modelItem => item.BaseSalary)
-                    <td>
-                        <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> 
-                        <a asp-action="Details" asp-route-id="@item.Id">Details</a>
-                        <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-                    </td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-outline-primary">Edit</a>
+                    <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-sm btn-outline-primary">Details</a>
+                    @*Chama método Delete do Seller e envia ID na rota;*@
+                    <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-sm btn-outline-primary">Delete</a>
+                </td>
             </tr>
         }
     </tbody>

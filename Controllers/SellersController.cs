@@ -20,7 +20,7 @@ namespace CSharpUdemy_MVC.Controllers
         }
 
         public IActionResult Index()
-        {   
+        {
             //Chama o método FindAll do serviço --- Serviço lista todos os Sellers;
             var list = _SellerService.FindAll();
             return View(list);
@@ -29,7 +29,7 @@ namespace CSharpUdemy_MVC.Controllers
 
         //Ação Create Seller
         public IActionResult Create()
-        {   
+        {
             //Cria variável department e chama o método FindAll do DepartmentService --- Serviço lista todos os Departamentos.
             var departments = _departmentService.FindAll();
             //ViewModel um objeto enviado para complementar informações na página. Dados que serão necessários para criação do elemento.
@@ -47,5 +47,40 @@ namespace CSharpUdemy_MVC.Controllers
             _SellerService.Insert(seller);
             return RedirectToAction(nameof(Index));
         }
+
+
+        //Delete:
+        //Método Get para abrir a page de Confirmação se realmente quer excluir
+        public IActionResult Delete(int? id)
+        {
+            //Se id for nulo ou seja houver algo errado na requisição, responder notfound;
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            //Chama o método FindById do serviço seller e envia o ID (IMPORTANTE COLOCAR ID.VALUE, porque ele é um tipo anulavel)
+            var obj = _SellerService.FindById(id.Value);
+
+            //Se o objeto que retornar não existir, retorna notfound também;
+                if (obj == null)
+            {
+                return NotFound();
+            }
+
+                //Se sucesso, chamar a View Index enviando o OBJ;
+            return View(obj);
+        }
+
+
+        //Agora sim função POST DELETE, Chamada pelo botao do Form, enviando o ID para o SellerService;
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Delete(int id)
+        {
+            _SellerService.Remove(id);
+            return RedirectToAction(nameof(Index));
+        }
+
     }
 }

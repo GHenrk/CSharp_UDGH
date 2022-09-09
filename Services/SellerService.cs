@@ -26,6 +26,19 @@ namespace CSharpUdemy_MVC.Services
             _context.SaveChanges();
         }
 
+        public Seller FindById(int id)
+        {
+            //busca no contexto o Seller, primeiro ou padrao cujo obj.Id seja igual ao Id enviado no parametro;
+            //Retorna o OBJ;
+            return _context.Seller.FirstOrDefault(obj => obj.Id == id);
+        }
+
+        public void Remove(int id)
+        {
+            var obj = _context.Seller.Find(id);
+            _context.Seller.Remove(obj);
+            _context.SaveChanges();
+        }
 
 
 
