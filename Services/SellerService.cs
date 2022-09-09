@@ -1,5 +1,6 @@
 ﻿using CSharpUdemy_MVC.Data;
 using CSharpUdemy_MVC.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace CSharpUdemy_MVC.Services
 {
@@ -30,7 +31,7 @@ namespace CSharpUdemy_MVC.Services
         {
             //busca no contexto o Seller, primeiro ou padrao cujo obj.Id seja igual ao Id enviado no parametro;
             //Retorna o OBJ;
-            return _context.Seller.FirstOrDefault(obj => obj.Id == id);
+            return _context.Seller.Include(obj => obj.Department).FirstOrDefault(obj => obj.Id == id);
         }
 
         public void Remove(int id)
