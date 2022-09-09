@@ -31,6 +31,7 @@ namespace CSharpUdemy_MVC.Services
         {
             //busca no contexto o Seller, primeiro ou padrao cujo obj.Id seja igual ao Id enviado no parametro;
             //Retorna o OBJ;
+            //Funcao include para carregar também o odepartment do obj;
             return _context.Seller.Include(obj => obj.Department).FirstOrDefault(obj => obj.Id == id);
         }
 
