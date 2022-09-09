@@ -18,6 +18,16 @@ namespace CSharpUdemy_MVC.Services
             return _context.Seller.ToList();
         }
 
+        public void Insert(Seller obj)
+
+        {   //Adiciona o primeiro departamento ao objeto, para teste de cadastro!
+            //obj.Department = _context.Department.First();
+            _context.Add(obj);
+            _context.SaveChanges();
+        }
+
+
+
 
     }
 }
