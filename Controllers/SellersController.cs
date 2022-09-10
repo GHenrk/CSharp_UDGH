@@ -1,6 +1,7 @@
 ﻿using CSharpUdemy_MVC.Models;
 using CSharpUdemy_MVC.Models.ViewModels;
 using CSharpUdemy_MVC.Services;
+using CSharpUdemy_MVC.Services.Exceptions;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CSharpUdemy_MVC.Controllers
@@ -63,12 +64,12 @@ namespace CSharpUdemy_MVC.Controllers
             var obj = _SellerService.FindById(id.Value);
 
             //Se o objeto que retornar não existir, retorna notfound também;
-                if (obj == null)
+            if (obj == null)
             {
                 return NotFound();
             }
 
-                //Se sucesso, chamar a View Index enviando o OBJ;
+            //Se sucesso, chamar a View Index enviando o OBJ;
             return View(obj);
         }
 
@@ -85,23 +86,73 @@ namespace CSharpUdemy_MVC.Controllers
 
         public IActionResult Details(int? id)
         {
-            
+
             if (id == null)
             {
                 return NotFound();
             }
 
-            
+
             var obj = _SellerService.FindById(id.Value);
 
-            
+
             if (obj == null)
             {
                 return NotFound();
             }
 
-            
+
             return View(obj);
+        }
+
+        public IActionResult Edit(int? id)
+        {
+            //verifica se Id null
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            //Chama sellerService e funcao find by id enviando ID;
+            var obj = _SellerService.FindById(id.Value);
+
+            //se retorno for igual a null
+            if (obj == null)
+            {
+                return NotFound();
+            }
+
+            List<Department> departments = _departmentService.FindAll();
+
+            SellerFormViewModel viewModel = new SellerFormViewModel { Seller = obj, Departments = departments };
+            return View(viewModel);
+
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Edit(int id, Seller seller)
+        {
+            if (id != seller.Id)
+            {
+                return BadRequest();
+
+            }
+            try
+            {
+                _SellerService.Update(seller);
+                return RedirectToAction(nameof(Index));
+            }
+            catch (NotFoundException)
+            {
+                return NotFound();
+            }
+            catch (DbConcurrencyException)
+            {
+                return BadRequest();
+            }
+
+
         }
 
     }
