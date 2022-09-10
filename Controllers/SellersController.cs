@@ -32,6 +32,8 @@ namespace CSharpUdemy_MVC.Controllers
         //Ação Create Seller
         public IActionResult Create()
         {
+
+
             //Cria variável department e chama o método FindAll do DepartmentService --- Serviço lista todos os Departamentos.
             var departments = _departmentService.FindAll();
             //ViewModel um objeto enviado para complementar informações na página. Dados que serão necessários para criação do elemento.
@@ -46,6 +48,12 @@ namespace CSharpUdemy_MVC.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult Create(Seller seller)
         {
+            if (!ModelState.IsValid)
+            {
+                var departments = _departmentService.FindAll();
+                var viewModel = new SellerFormViewModel { Seller = seller, Departments = departments };
+                return View(viewModel);
+            }
             _SellerService.Insert(seller);
             return RedirectToAction(nameof(Index));
         }
@@ -134,6 +142,12 @@ namespace CSharpUdemy_MVC.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult Edit(int id, Seller seller)
         {
+            if (!ModelState.IsValid)
+            {
+                var departments = _departmentService.FindAll();
+                var viewModel = new SellerFormViewModel { Seller = seller, Departments = departments };
+                return View(viewModel);
+            }
             if (id != seller.Id)
             {
                 return BadRequest();

@@ -11,18 +11,26 @@ namespace CSharpUdemy_MVC.Models
         public int Id { get; set; }
 
         [Display(Name = "Nome:")]
+        [Required(ErrorMessage = "{0} é obrigatório!")]
+        [StringLength(60, MinimumLength = 3, ErrorMessage = "Insira um {0} entre {2} e {1} caracteres!" )]
         public string Name { get; set; }
 
+
         [DataType(DataType.EmailAddress)]
+        [Required(ErrorMessage = "{0} é obrigatório!")]
+        [EmailAddress(ErrorMessage = "{0} precisa ser um campo válido!")]
         public string Email { get; set; }
 
         [Display(Name = "Data de Nascimento")]
         [DataType(DataType.Date)]
         [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}")]
+        [Required(ErrorMessage = "{0} é obrigatório!")]
         public DateTime BirthDate { get; set; }
 
         [Display(Name = "Salário base")]
         [DisplayFormat(DataFormatString = "{0:F2}")]
+        [Required(ErrorMessage = "{0} é obrigatório!")]
+        [Range(100.0, 500000, ErrorMessage ="{0} está inválido! insira um valor entre {1} e {2}")]
         public double BaseSalary { get; set; }
 
 
