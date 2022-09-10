@@ -3,6 +3,7 @@ using CSharpUdemy_MVC.Models.ViewModels;
 using CSharpUdemy_MVC.Services;
 using CSharpUdemy_MVC.Services.Exceptions;
 using Microsoft.AspNetCore.Mvc;
+using System.Diagnostics;
 
 namespace CSharpUdemy_MVC.Controllers
 {
@@ -57,7 +58,7 @@ namespace CSharpUdemy_MVC.Controllers
             //Se id for nulo ou seja houver algo errado na requisição, responder notfound;
             if (id == null)
             {
-                return NotFound();
+                return RedirectToAction(nameof(Error), new { message = "Algo deu errado na requisição!"});
             }
 
             //Chama o método FindById do serviço seller e envia o ID (IMPORTANTE COLOCAR ID.VALUE, porque ele é um tipo anulavel)
@@ -66,7 +67,7 @@ namespace CSharpUdemy_MVC.Controllers
             //Se o objeto que retornar não existir, retorna notfound também;
             if (obj == null)
             {
-                return NotFound();
+                return RedirectToAction(nameof(Error), new { message = "Esse elemento não foi encontrado!" });
             }
 
             //Se sucesso, chamar a View Index enviando o OBJ;
@@ -89,7 +90,7 @@ namespace CSharpUdemy_MVC.Controllers
 
             if (id == null)
             {
-                return NotFound();
+                return RedirectToAction(nameof(Error), new { message = "Algo deu errado na requisição!" });
             }
 
 
@@ -98,7 +99,7 @@ namespace CSharpUdemy_MVC.Controllers
 
             if (obj == null)
             {
-                return NotFound();
+                return RedirectToAction(nameof(Error), new { message = "Esse elemento não foi encontrado!" });
             }
 
 
@@ -110,7 +111,7 @@ namespace CSharpUdemy_MVC.Controllers
             //verifica se Id null
             if (id == null)
             {
-                return NotFound();
+                return RedirectToAction(nameof(Error), new { message = "Algo deu errado na requisição" });
             }
 
             //Chama sellerService e funcao find by id enviando ID;
@@ -119,7 +120,7 @@ namespace CSharpUdemy_MVC.Controllers
             //se retorno for igual a null
             if (obj == null)
             {
-                return NotFound();
+                return RedirectToAction(nameof(Error), new { message = "Esse elemento não foi encontrado!" });
             }
 
             List<Department> departments = _departmentService.FindAll();
@@ -143,16 +144,25 @@ namespace CSharpUdemy_MVC.Controllers
                 _SellerService.Update(seller);
                 return RedirectToAction(nameof(Index));
             }
-            catch (NotFoundException)
+            catch (ApplicationException e)
             {
-                return NotFound();
-            }
-            catch (DbConcurrencyException)
-            {
-                return BadRequest();
+                return RedirectToAction(nameof(Error), new { message = e.Message });
             }
 
 
+        }
+
+
+
+        public IActionResult Error(string message)
+        {
+            var viewModel = new ErrorViewModel
+            {
+                Message = message,
+                RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier
+            };
+
+            return View(viewModel);
         }
 
     }
