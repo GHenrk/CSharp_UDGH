@@ -66,7 +66,7 @@ namespace CSharpUdemy_MVC.Controllers
             //Se id for nulo ou seja houver algo errado na requisição, responder notfound;
             if (id == null)
             {
-                return RedirectToAction(nameof(Error), new { message = "Algo deu errado na requisição!"});
+                return RedirectToAction(nameof(Error), new { message = "Algo deu errado na requisição!" });
             }
 
             //Chama o método FindById do serviço seller e envia o ID (IMPORTANTE COLOCAR ID.VALUE, porque ele é um tipo anulavel)
@@ -88,10 +88,17 @@ namespace CSharpUdemy_MVC.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Delete(int id)
         {
-            await _SellerService.RemoveAsync(id);
-            return RedirectToAction(nameof(Index));
-        }
+            try
+            {
+                await _SellerService.RemoveAsync(id);
+                return RedirectToAction(nameof(Index));
 
+            }
+            catch (IntegrityException e)
+            {
+                return RedirectToAction(nameof(Error), new { message = "Este vendedor possui vendas cadastradas, impossível removê-lo!" });
+            }
+        }
 
         public async Task<IActionResult> Details(int? id)
         {

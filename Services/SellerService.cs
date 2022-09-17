@@ -1,6 +1,7 @@
 ﻿using CSharpUdemy_MVC.Data;
 using CSharpUdemy_MVC.Models;
 using CSharpUdemy_MVC.Services.Exceptions;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.EntityFrameworkCore;
 
 namespace CSharpUdemy_MVC.Services
@@ -38,11 +39,17 @@ namespace CSharpUdemy_MVC.Services
 
         public async Task RemoveAsync(int id)
         {
-            var obj = await _context.Seller.FindAsync(id);
-            _context.Seller.Remove(obj);
-            await _context.SaveChangesAsync();
-        }
+            try {
+                var obj = await _context.Seller.FindAsync(id);
+                _context.Seller.Remove(obj);
+                await _context.SaveChangesAsync();
 
+            }
+            catch (DbUpdateException e)
+            {
+                throw new IntegrityException(e.Message);
+            }
+        }
         public async Task UpdateAsync(Seller obj)
         { bool hasAny = await _context.Seller.AnyAsync(x => x.Id == obj.Id);
             if (!hasAny)
