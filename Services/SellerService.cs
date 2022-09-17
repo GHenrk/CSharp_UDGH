@@ -15,44 +15,44 @@ namespace CSharpUdemy_MVC.Services
             _context = context;
         }
 
-        public List<Seller> FindAll()
+        public async Task<List<Seller>> FindAllAsync()
         {
-            return _context.Seller.ToList();
+            return await _context.Seller.ToListAsync();
         }
 
-        public void Insert(Seller obj)
+        public async Task InsertAsync(Seller obj)
 
         {   //Adiciona o primeiro departamento ao objeto, para teste de cadastro!
             //obj.Department = _context.Department.First();
-            _context.Add(obj);
-            _context.SaveChanges();
+            _context.Seller.Add(obj);
+            await _context.SaveChangesAsync();
         }
 
-        public Seller FindById(int id)
+        public async Task<Seller> FindByIdAsync(int id)
         {
             //busca no contexto o Seller, primeiro ou padrao cujo obj.Id seja igual ao Id enviado no parametro;
             //Retorna o OBJ;
             //Funcao include para carregar também o odepartment do obj;
-            return _context.Seller.Include(obj => obj.Department).FirstOrDefault(obj => obj.Id == id);
+            return await _context.Seller.Include(obj => obj.Department).FirstOrDefaultAsync(obj => obj.Id == id);
         }
 
-        public void Remove(int id)
+        public async Task RemoveAsync(int id)
         {
-            var obj = _context.Seller.Find(id);
+            var obj = await _context.Seller.FindAsync(id);
             _context.Seller.Remove(obj);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
         }
 
-        public void Update(Seller obj)
-        {
-            if (!_context.Seller.Any(x => x.Id == obj.Id))
+        public async Task UpdateAsync(Seller obj)
+        { bool hasAny = await _context.Seller.AnyAsync(x => x.Id == obj.Id);
+            if (!hasAny)
             {
                 throw new NotFoundException("Elemento não encontrado");
             }
             try 
             {
-                _context.Update(obj);
-                _context.SaveChanges();
+                _context.Seller.Update(obj);
+                await _context.SaveChangesAsync();
             }
             catch (DbUpdateConcurrencyException e)
             {

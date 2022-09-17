@@ -21,21 +21,21 @@ namespace CSharpUdemy_MVC.Controllers
             _departmentService = departmentService;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
             //Chama o método FindAll do serviço --- Serviço lista todos os Sellers;
-            var list = _SellerService.FindAll();
+            var list = await _SellerService.FindAllAsync();
             return View(list);
         }
 
 
         //Ação Create Seller
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
 
 
             //Cria variável department e chama o método FindAll do DepartmentService --- Serviço lista todos os Departamentos.
-            var departments = _departmentService.FindAll();
+            var departments = await _departmentService.FindAllAsync();
             //ViewModel um objeto enviado para complementar informações na página. Dados que serão necessários para criação do elemento.
             //Cria variável viewModel e instancia um objeto SallerFormViewModel e insere os Departamentos buscados no banco acima a lista de Departments do ViewModel;
             var viewModel = new SellerFormViewModel { Departments = departments };
@@ -46,22 +46,22 @@ namespace CSharpUdemy_MVC.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Create(Seller seller)
+        public async Task<IActionResult> Create(Seller seller)
         {
-            if (!ModelState.IsValid)
-            {
-                var departments = _departmentService.FindAll();
-                var viewModel = new SellerFormViewModel { Seller = seller, Departments = departments };
-                return View(viewModel);
-            }
-            _SellerService.Insert(seller);
+            //if (!ModelState.IsValid)
+            //{
+            //    var departments = await _departmentService.FindAllAsync();
+            //    var viewModel = new SellerFormViewModel { Seller = seller, Departments = departments };
+            //    return View(viewModel);
+            //}
+            await _SellerService.InsertAsync(seller);
             return RedirectToAction(nameof(Index));
         }
 
 
         //Delete:
         //Método Get para abrir a page de Confirmação se realmente quer excluir
-        public IActionResult Delete(int? id)
+        public async Task<IActionResult> Delete(int? id)
         {
             //Se id for nulo ou seja houver algo errado na requisição, responder notfound;
             if (id == null)
@@ -70,7 +70,7 @@ namespace CSharpUdemy_MVC.Controllers
             }
 
             //Chama o método FindById do serviço seller e envia o ID (IMPORTANTE COLOCAR ID.VALUE, porque ele é um tipo anulavel)
-            var obj = _SellerService.FindById(id.Value);
+            var obj = await _SellerService.FindByIdAsync(id.Value);
 
             //Se o objeto que retornar não existir, retorna notfound também;
             if (obj == null)
@@ -86,14 +86,14 @@ namespace CSharpUdemy_MVC.Controllers
         //Agora sim função POST DELETE, Chamada pelo botao do Form, enviando o ID para o SellerService;
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Delete(int id)
+        public async Task<IActionResult> Delete(int id)
         {
-            _SellerService.Remove(id);
+            await _SellerService.RemoveAsync(id);
             return RedirectToAction(nameof(Index));
         }
 
 
-        public IActionResult Details(int? id)
+        public async Task<IActionResult> Details(int? id)
         {
 
             if (id == null)
@@ -102,7 +102,7 @@ namespace CSharpUdemy_MVC.Controllers
             }
 
 
-            var obj = _SellerService.FindById(id.Value);
+            var obj = await _SellerService.FindByIdAsync(id.Value);
 
 
             if (obj == null)
@@ -114,7 +114,7 @@ namespace CSharpUdemy_MVC.Controllers
             return View(obj);
         }
 
-        public IActionResult Edit(int? id)
+        public async Task<IActionResult> Edit(int? id)
         {
             //verifica se Id null
             if (id == null)
@@ -123,7 +123,7 @@ namespace CSharpUdemy_MVC.Controllers
             }
 
             //Chama sellerService e funcao find by id enviando ID;
-            var obj = _SellerService.FindById(id.Value);
+            var obj = await _SellerService.FindByIdAsync(id.Value);
 
             //se retorno for igual a null
             if (obj == null)
@@ -131,7 +131,7 @@ namespace CSharpUdemy_MVC.Controllers
                 return RedirectToAction(nameof(Error), new { message = "Esse elemento não foi encontrado!" });
             }
 
-            List<Department> departments = _departmentService.FindAll();
+            List<Department> departments = await _departmentService.FindAllAsync();
 
             SellerFormViewModel viewModel = new SellerFormViewModel { Seller = obj, Departments = departments };
             return View(viewModel);
@@ -140,14 +140,14 @@ namespace CSharpUdemy_MVC.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Edit(int id, Seller seller)
+        public async Task<IActionResult> Edit(int id, Seller seller)
         {
-            if (!ModelState.IsValid)
-            {
-                var departments = _departmentService.FindAll();
-                var viewModel = new SellerFormViewModel { Seller = seller, Departments = departments };
-                return View(viewModel);
-            }
+            //if (!ModelState.IsValid)
+            //{
+            //    var departments = await _departmentService.FindAllAsync();
+            //    var viewModel = new SellerFormViewModel { Seller = seller, Departments = departments };
+            //    return View(viewModel);
+            //}
             if (id != seller.Id)
             {
                 return BadRequest();
@@ -155,7 +155,7 @@ namespace CSharpUdemy_MVC.Controllers
             }
             try
             {
-                _SellerService.Update(seller);
+                await _SellerService.UpdateAsync(seller);
                 return RedirectToAction(nameof(Index));
             }
             catch (ApplicationException e)

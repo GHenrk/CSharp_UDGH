@@ -1,5 +1,6 @@
 ﻿using CSharpUdemy_MVC.Data;
 using CSharpUdemy_MVC.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace CSharpUdemy_MVC.Services
 {
@@ -13,9 +14,10 @@ namespace CSharpUdemy_MVC.Services
             _context = context;
         }
 
-        public List<Department> FindAll()
+
+        public async Task<List<Department>> FindAllAsync()
         {
-            return _context.Department.OrderBy(x => x.Name).ToList();
+            return await _context.Department.OrderBy(x => x.Name).ToListAsync();
         }
     }
 }

@@ -57,8 +57,7 @@ void SeedDatabase() //Cria uma função
 
 void LocalizationService()
 {
-    using (var scope1 = app.Services.CreateScope())
-    {
+   
         var enUs = new CultureInfo("en-US");
         var localizationOptions = new RequestLocalizationOptions
         {
@@ -67,5 +66,5 @@ void LocalizationService()
             SupportedUICultures = new List<CultureInfo> { enUs },
         };
         app.UseRequestLocalization(localizationOptions);
-    }
+    
 }
