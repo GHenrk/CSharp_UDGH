@@ -7,6 +7,9 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using CSharpUdemy_MVC.Data;
 using CSharpUdemy_MVC.Models;
+using CSharpUdemy_MVC.Services.Exceptions;
+using CSharpUdemy_MVC.Models.ViewModels;
+using System.Diagnostics;
 
 namespace CSharpUdemy_MVC.Controllers
 {
@@ -141,23 +144,41 @@ namespace CSharpUdemy_MVC.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            if (_context.Department == null)
+            try
             {
-                return Problem("Entity set 'CSharpUdemy_MVCContext.Department'  is null.");
+                if (_context.Department == null)
+                {
+                    return Problem("Este departamento não foi encontrado");
+                }
+                var department = await _context.Department.FindAsync(id);
+                if (department != null)
+                {
+                    _context.Department.Remove(department);
+                }
+
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Index));
             }
-            var department = await _context.Department.FindAsync(id);
-            if (department != null)
+            catch (DbUpdateException e)
             {
-                _context.Department.Remove(department);
+                return RedirectToAction(nameof(Error), new { message = "Este departamento contém vendedores cadastrados, impossível removê-lo!" });
             }
-            
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
         }
 
         private bool DepartmentExists(int id)
         {
           return (_context.Department?.Any(e => e.Id == id)).GetValueOrDefault();
+        }
+
+        public IActionResult Error(string message)
+        {
+            var viewModel = new ErrorViewModel
+            {
+                Message = message,
+                RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier
+            };
+
+            return View(viewModel);
         }
     }
 }
