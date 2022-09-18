@@ -1,4 +1,5 @@
 ﻿using CSharpUdemy_MVC.Models.Enums;
+using System.ComponentModel.DataAnnotations;
 
 namespace CSharpUdemy_MVC.Models
 {
@@ -6,6 +7,8 @@ namespace CSharpUdemy_MVC.Models
     {
         public int Id { get; set; }
 
+        [DataType(DataType.Date)]
+        //[DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}")]
         public DateTime Date { get; set; }
 
         public double Amount { get; set; }
