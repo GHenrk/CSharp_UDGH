@@ -5,11 +5,11 @@ namespace CSharpUdemy_MVC.Controllers
 {
     public class SalesRecordsController : Controller
     {
-        private readonly SalesRecordsService _salesRecordsService;
+        private readonly SalesRecordService _salesRecordService;
 
-        public SalesRecordsController(SalesRecordsService salesRecordsService)
+        public SalesRecordsController(SalesRecordService salesRecordsService)
         {
-            _salesRecordsService = salesRecordsService;
+            _salesRecordService = salesRecordsService;
         }
 
         public IActionResult Index()
@@ -31,13 +31,24 @@ namespace CSharpUdemy_MVC.Controllers
             }
             ViewData["minDate"] = minDate.Value.ToString("dd/MM/yyyy");
             ViewData["maxDate"] = maxDate.Value.ToString("dd/MM/yyyy");
-            var result = await _salesRecordsService.FindByDateAsync(minDate,maxDate);
+            var result = await _salesRecordService.FindByDateAsync(minDate,maxDate);
             return View(result);
         }
 
-        public IActionResult GroupingSearch()
+        public async Task<IActionResult> GroupingSearch(DateTime? minDate, DateTime? maxDate)
         {
-            return View();
+            if (!minDate.HasValue)
+            {
+                minDate = new DateTime(2018, 1, 1);
+            }
+            if (!maxDate.HasValue)
+            {
+                maxDate = DateTime.Now;
+            }
+            ViewData["minDate"] = minDate.Value.ToString("yyyy-MM-dd");
+            ViewData["maxDate"] = maxDate.Value.ToString("yyyy-MM-dd");
+            var result = await _salesRecordService.FindByDateGroupingAsync(minDate, maxDate);
+            return View(result);
         }
     }
 }

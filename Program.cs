@@ -15,7 +15,7 @@ builder.Services.AddDbContext<CSharpUdemy_MVCContext>(options =>
 builder.Services.AddScoped<SeedingService>();
 builder.Services.AddScoped<SellerService>();
 builder.Services.AddScoped<DepartmentService>();
-builder.Services.AddScoped<SalesRecordsService>();
+builder.Services.AddScoped<SalesRecordService>();
 
 builder.Services.AddControllersWithViews();
 
